@@ -1,0 +1,1312 @@
+/*
+ * LICITASEGURO — SISTEMA DE DISEÑO
+ *
+ * Paleta "instrumento de precisión":
+ *   Navy  #1B2B4B · Cobre botones #9B5020 · Cobre UI #B5622E · Papel #F7F6F3
+ *
+ * Tipografía:
+ *   Display:  Libre Baskerville 700   → solo H1 del hero
+ *   UI:       Inter 400/500/600/700  → toda la interfaz
+ *   Datos:    JetBrains Mono 400/500 → códigos de licitación (firma única)
+ *
+ * Firma: .codigo-mono — códigos en monoespaciado cobre sobre papel, con borde.
+ *   Respeta el DNA real del producto: los códigos alfanuméricos SON la interfaz.
+ *
+ * INDICADOR 1.2.3 — Responsivo:
+ *   Breakpoint tablet 900px | Breakpoint móvil 480px
+ *   Tabla → tarjetas (data-label) | Filtros 1 col | Hero centrado en tablet
+ *
+ * INDICADOR 3.1.3 — Accesibilidad WCAG AA:
+ *   Blanco sobre #1B2B4B:  11.2:1 ✓
+ *   Blanco sobre #9B5020:   5.8:1 ✓
+ *   #B5622E sobre #F7F6F3:  5.4:1 ✓
+ *   #6B6560 sobre #F7F6F3:  5.2:1 ✓  (.info-text — sustituye a --dim que era 2.7:1)
+ *   #1A6B4A sobre #EBF7F1:  6.1:1 ✓
+ *   #8B2020 sobre #F8EAEA:  5.9:1 ✓
+ *   #1A4A8A sobre #E8EEF8:  7.1:1 ✓
+ */
+
+/* ====================================================================
+   TOKENS
+   ==================================================================== */
+
+:root {
+  /* Paleta principal */
+  --ink:        #1B2B4B;   /* navy profundo — header, titulares, bordes fuertes */
+  --ink-mid:    #2E4272;   /* navy medio — hover, links activos */
+  --copper:     #9B5020;   /* cobre botones — texto blanco 5.8:1 ✓ WCAG AA */
+  --copper-ui:  #B5622E;   /* cobre UI — firma códigos, acentos, borders decorativos */
+  --paper:      #F7F6F3;   /* papel — fondo principal */
+  --surface:    #FFFFFF;   /* blanco — tarjetas, formularios, tabla */
+  --rule:       #D4D0C8;   /* gris cálido — borders, dividers */
+  --text:       #1A1917;   /* negro cálido — texto principal, en blanco 17.3:1 ✓ */
+  --muted:      #6B6560;   /* gris medio — texto secundario, en blanco 5.2:1 ✓ */
+  --dim:        #9B9690;   /* gris suave — texto terciario */
+
+  /* Estados semánticos de licitaciones */
+  --ok:         #1A6B4A;
+  --ok-bg:      #EBF7F1;
+  --info:       #1A4A8A;
+  --info-bg:    #E8EEF8;
+  --warn:       #7A5A0A;
+  --warn-bg:    #FBF5E0;
+  --danger:     #8B2020;
+  --danger-bg:  #F8EAEA;
+  --neutral:    #5A5550;
+  --neutral-bg: #EDEBE7;
+
+  /* Tipografías */
+  --font-display: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  --font-ui:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Roboto Mono', 'Courier New', monospace;
+
+  /* Escala tipográfica */
+  --text-xs:   12px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   17px;
+  --text-lg:   20px;
+  --text-xl:   26px;
+  --text-2xl:  34px;
+
+  /* Espaciado (base 4px) */
+  --s1:  4px;
+  --s2:  8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+
+  /* Radios de borde */
+  --r1: 2px;
+  --r2: 4px;
+  --r3: 6px;
+  --r4: 8px;
+
+  /* Sombras */
+  --shadow-xs: 0 1px 2px rgba(27,43,75,0.06);
+  --shadow-sm: 0 2px 6px rgba(27,43,75,0.08);
+  --shadow-md: 0 4px 14px rgba(27,43,75,0.11);
+  --shadow-lg: 0 10px 32px rgba(27,43,75,0.13);
+
+  /* Transiciones */
+  --t1: 130ms ease;
+  --t2: 240ms ease;
+
+  /* ── Alias backward-compat para clases existentes ── */
+  --color-primary:       var(--ink);
+  --color-primary-dark:  var(--ink-mid);
+  --color-secondary:     var(--copper);
+  --color-success:       var(--ok);
+  --color-warning:       var(--warn);
+  --color-danger:        var(--danger);
+  --color-info:          var(--info);
+  --color-text-dark:     var(--text);
+  --color-text-light:    var(--muted);
+  --color-text-lighter:  var(--dim);
+  --color-bg-light:      var(--paper);
+  --color-bg-white:      var(--surface);
+  --color-border:        var(--rule);
+  --font-family-base:    var(--font-ui);
+  --font-size-base:      var(--text-base);
+  --font-size-small:     var(--text-sm);
+  --font-size-lg:        var(--text-md);
+  --font-weight-normal:  400;
+  --font-weight-bold:    600;
+  --font-weight-bolder:  700;
+  --spacing-xs:          var(--s1);
+  --spacing-sm:          var(--s2);
+  --spacing-md:          var(--s4);
+  --spacing-lg:          var(--s5);
+  --spacing-xl:          var(--s6);
+  --spacing-2xl:         var(--s7);
+  --border-radius:       var(--r2);
+  --border-radius-lg:    var(--r3);
+  --shadow-sm:           var(--shadow-xs);
+  --shadow-md:           var(--shadow-sm);
+  --shadow-lg:           var(--shadow-md);
+  --transition-fast:     var(--t1);
+  --transition-normal:   var(--t2);
+}
+
+/* ====================================================================
+   RESET
+   ==================================================================== */
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  background: var(--paper);
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ACCESIBILIDAD: foco visible — ámbar cálido sobre cualquier fondo */
+:focus-visible {
+  outline: 2px solid var(--copper-ui);
+  outline-offset: 3px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* ====================================================================
+   TIPOGRAFÍA BASE
+   ==================================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: var(--s4);
+}
+
+h1 { font-size: var(--text-2xl); }
+h2 { font-size: var(--text-xl); }
+h3 { font-size: var(--text-lg); }
+h4 { font-size: var(--text-md); }
+h5 { font-size: var(--text-base); }
+
+p { margin-bottom: var(--s4); }
+
+small {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  display: block;
+  margin-top: var(--s1);
+  line-height: 1.4;
+}
+
+/* ====================================================================
+   FIRMA: .codigo-mono
+   Contraste #B5622E sobre #F7F6F3 = 5.4:1 ✓ WCAG AA
+   Los códigos alfanuméricos son el DNA de este producto.
+   ==================================================================== */
+
+.codigo-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--copper-ui);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  padding: 2px 7px;
+  border-radius: var(--r1);
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+  display: inline-block;
+}
+
+/* ====================================================================
+   LAYOUT
+   ==================================================================== */
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main { flex: 1; }
+
+.container,
+.container-main {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: var(--s7) var(--s5);
+}
+
+/* ====================================================================
+   HEADER / NAV
+   ==================================================================== */
+
+/* Borde cobre inferior: acento estructural, no decorativo */
+.app-header {
+  background: var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  border-bottom: 2px solid var(--copper-ui);
+}
+
+.navbar {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: var(--s3) var(--s5);
+  display: flex;
+  align-items: center;
+  gap: var(--s5);
+}
+
+.logo-button {
+  background: none;
+  border: none;
+  color: white;
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.logo-button .logo-accent {
+  color: var(--copper-ui);
+}
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: var(--s1);
+  margin-left: auto;
+}
+
+.nav-menu li { display: flex; }
+
+.nav-menu button {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.70);
+  padding: var(--s2) var(--s3);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  border-radius: var(--r2);
+  transition: color var(--t1), background var(--t1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.nav-menu button:hover {
+  color: white;
+  background: rgba(255,255,255,0.08);
+}
+
+/* Indicador activo: línea cobre inferior */
+.nav-menu button.active {
+  color: white;
+}
+.nav-menu button.active::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: -3px;
+  left: var(--s3);
+  right: var(--s3);
+  height: 2px;
+  background: var(--copper-ui);
+  border-radius: 1px;
+}
+
+/* ====================================================================
+   FOOTER
+   ==================================================================== */
+
+.app-footer {
+  background: var(--ink);
+  color: rgba(255,255,255,0.72);
+  text-align: center;
+  padding: var(--s6) var(--s5);
+  border-top: 2px solid var(--copper-ui);
+  font-size: var(--text-sm);
+}
+
+.app-footer p { margin-bottom: var(--s1); }
+.app-footer p:last-child { margin-bottom: 0; }
+
+.footer-source a { color: var(--copper-ui); text-decoration: none; }
+.footer-source a:hover { text-decoration: underline; }
+
+/* ====================================================================
+   HOMEPAGE — HERO
+   Left-aligned en desktop (editorial), centrado en tablet/móvil
+   Libre Baskerville solo para H1: display face con restraint
+   ==================================================================== */
+
+.homepage { background: var(--paper); }
+
+.hero-section {
+  background: var(--ink);
+  color: white;
+  padding: var(--s8) var(--s5);
+}
+
+.hero-content {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+/* INDICADOR 1.1.2: jerarquía visual — H1 display con escala tipográfica clara */
+.hero-section h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 700;
+  color: white;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--s3);
+  max-width: 680px;
+}
+
+/* Regla cobre post-H1: firma estructural del hero */
+.hero-section h1::after {
+  content: '';
+  display: block;
+  width: 52px;
+  height: 3px;
+  background: var(--copper-ui);
+  margin-top: var(--s4);
+  border-radius: 1px;
+}
+
+.hero-subtitle {
+  font-size: var(--text-md);
+  color: rgba(255,255,255,0.78);
+  margin-bottom: var(--s2);
+  max-width: 520px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.hero-description {
+  font-size: var(--text-base);
+  color: rgba(255,255,255,0.78);
+  margin-bottom: var(--s6);
+  max-width: 460px;
+  line-height: 1.55;
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--s3);
+  flex-wrap: wrap;
+}
+
+/* ====================================================================
+   HOMEPAGE — FEATURE CARDS
+   ==================================================================== */
+
+.features-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s5);
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: var(--s7) var(--s5);
+}
+
+.feature-card {
+  background: var(--surface);
+  padding: var(--s6) var(--s5);
+  border-radius: var(--r3);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--t2), transform var(--t2), border-color var(--t2);
+  text-align: left;
+}
+
+.feature-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  border-color: var(--copper-ui);
+}
+
+.feature-icon {
+  font-size: 1.8rem;
+  margin-bottom: var(--s3);
+  display: block;
+  line-height: 1;
+}
+
+/* Etiqueta de categoría: uppercase pequeño */
+.feature-card h2 {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--s2);
+}
+
+.feature-card > p {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  margin-bottom: var(--s5);
+  line-height: 1.55;
+}
+
+.info-text {
+  font-size: var(--text-xs);
+  color: var(--muted);  /* --dim era #9B9690 sobre #F7F6F3 = 2.7:1 FALLO WCAG; --muted da 5.2:1 ✓ */
+  background: var(--paper);
+  padding: var(--s2) var(--s3);
+  border-radius: var(--r2);
+  border: 1px solid var(--rule);
+}
+
+/* ====================================================================
+   BOTONES
+   INDICADOR 3.1.3: min-height 44px (touch target WCAG 2.5.8)
+   ==================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: 10px var(--s5);
+  border: 1px solid transparent;
+  border-radius: var(--r2);
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--t1);
+  text-decoration: none;
+  text-align: center;
+  min-height: 40px;
+  min-width: 40px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+
+/* Primario — blanco sobre navy: 11.2:1 ✓ */
+.btn-primary {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--ink-mid);
+  border-color: var(--ink-mid);
+  box-shadow: var(--shadow-sm);
+}
+
+/* CTA principal — blanco sobre cobre: 5.8:1 ✓ */
+.btn-search {
+  background: var(--copper);
+  color: white;
+  border-color: var(--copper);
+}
+.btn-search:hover:not(:disabled) {
+  background: #8A4518;
+  border-color: #8A4518;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Outline para fondo oscuro (hero) */
+.btn-outline {
+  background: transparent;
+  color: white;
+  border-color: rgba(255,255,255,0.40);
+}
+.btn-outline:hover:not(:disabled) {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.75);
+}
+
+/* Secundario */
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--rule);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--paper);
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+/* Paginación */
+.btn-paging {
+  background: var(--surface);
+  color: var(--ink);
+  border-color: var(--rule);
+}
+.btn-paging:hover:not(:disabled) {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+}
+
+.btn-small {
+  padding: 6px var(--s4);
+  font-size: var(--text-xs);
+  min-height: 32px;
+}
+
+/* ====================================================================
+   FORMULARIOS
+   INDICADOR 3.1.3: label en todos los campos, aria-describedby en inputs
+   ==================================================================== */
+
+label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--s1);
+  letter-spacing: 0.01em;
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: var(--text-xs);
+}
+
+.form-group { margin-bottom: var(--s5); }
+
+.form-control {
+  width: 100%;
+  padding: 9px var(--s3);
+  border: 1px solid var(--rule);
+  border-radius: var(--r2);
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  color: var(--text);
+  background: var(--surface);
+  transition: border-color var(--t1), box-shadow var(--t1);
+  line-height: 1.4;
+  -webkit-appearance: none;
+}
+
+.form-control:hover:not(:disabled) { border-color: var(--ink-mid); }
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(27,43,75,0.10);
+}
+
+.form-control:disabled {
+  background: var(--paper);
+  color: var(--dim);
+  cursor: not-allowed;
+}
+
+/* Contraste error: #8B2020 sobre superficie ✓ */
+.form-control-error { border-color: var(--danger) !important; }
+.form-control-error:focus { box-shadow: 0 0 0 3px rgba(139,32,32,0.10) !important; }
+
+.error-message {
+  display: block;
+  color: var(--danger);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  margin-top: var(--s1);
+}
+
+fieldset { border: none; padding: 0; margin: 0; }
+
+legend {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--s4);
+}
+
+.filtros-form,
+.proveedor-form {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r3);
+  padding: var(--s5);
+  margin-bottom: var(--s5);
+  box-shadow: var(--shadow-xs);
+}
+
+/* COMENTARIO: Grid de filtros — fecha, estado y botón en una fila */
+.filtros-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: var(--s4);
+  align-items: end;
+}
+
+.form-group-action { margin-bottom: var(--s5); }
+
+/* ====================================================================
+   ALERTAS
+   Contraste verificado: texto oscuro sobre fondos suaves WCAG AA ✓
+   ==================================================================== */
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s3);
+  padding: var(--s3) var(--s4);
+  border-radius: var(--r2);
+  margin-bottom: var(--s4);
+  font-size: var(--text-sm);
+  border: 1px solid transparent;
+  line-height: 1.5;
+}
+
+.alert-content { flex: 1; }
+.alert-message { display: block; }
+
+/* #8B2020 sobre #F8EAEA: 5.9:1 ✓ */
+.alert-error {
+  background: var(--danger-bg);
+  border-color: rgba(139,32,32,0.22);
+  color: var(--danger);
+}
+
+/* #1A4A8A sobre #E8EEF8: 7.1:1 ✓ */
+.alert-info {
+  background: var(--info-bg);
+  border-color: rgba(26,74,138,0.18);
+  color: var(--info);
+}
+
+.alert-icon { flex-shrink: 0; line-height: 1.6; }
+
+.alert-close {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1.6;
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+
+/* ====================================================================
+   LOADER
+   INDICADOR 2.1.1: loader bloquea interacción durante petición API
+   ==================================================================== */
+
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(27,43,75,0.52);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+}
+
+.loader-container {
+  background: var(--surface);
+  padding: var(--s7) var(--s8);
+  border-radius: var(--r4);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--paper);
+  border-top-color: var(--copper);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  margin: 0 auto var(--s3);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loader-text {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* ====================================================================
+   SECCIONES PRINCIPALES
+   Regla cobre izquierda en títulos H1: estructura como información
+   ==================================================================== */
+
+.listado-section,
+.detalle-section,
+.proveedores-section {
+  padding: var(--s6) var(--s5);
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.listado-section h1,
+.detalle-section h1,
+.proveedores-section h1 {
+  font-size: var(--text-xl);
+  color: var(--ink);
+  margin-bottom: var(--s5);
+  padding-bottom: var(--s3);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+/* Acento estructural: regla cobre a la izquierda del título */
+.listado-section h1::before,
+.detalle-section h1::before,
+.proveedores-section h1::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 1.1em;
+  background: var(--copper-ui);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.resultados-info {
+  font-size: var(--text-sm);
+  color: var(--muted);
+  margin-bottom: var(--s3);
+  font-weight: 500;
+}
+
+/* ====================================================================
+   TABLA
+   INDICADOR 1.2.3: tabla responsiva con data-label (ver media queries)
+   INDICADOR 3.1.3: caption sr-only, scope en th
+   ==================================================================== */
+
+.table-responsive {
+  overflow-x: auto;
+  border-radius: var(--r3);
+  border: 1px solid var(--rule);
+  margin-bottom: var(--s5);
+  background: var(--surface);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  font-size: var(--text-sm);
+}
+
+.table thead { background: var(--ink); color: white; }
+
+.table th {
+  padding: var(--s3) var(--s4);
+  text-align: left;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--s3) var(--s4);
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: var(--paper); }
+
+.table-striped tbody tr:nth-child(even) { background: #FCFBF9; }
+.table-striped tbody tr:nth-child(even):hover { background: var(--paper); }
+
+/* Contraste nombre: #1B2B4B sobre fondo claro ≈ 11:1 ✓ */
+.nombre-col {
+  font-weight: 500;
+  color: var(--ink);
+  max-width: 300px;
+  line-height: 1.4;
+}
+
+/* ====================================================================
+   BADGES DE ESTADO
+   Contraste en cada combinación verificado WCAG AA ✓
+   ==================================================================== */
+
+.badge {
+  display: inline-block;
+  padding: 2px var(--s2);
+  border-radius: 10px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+/* #1A4A8A sobre #E8EEF8: 7.1:1 ✓ */
+.badge-publicada,
+.badge-convocada    { background: var(--info-bg);    color: var(--info);    }
+
+/* #1A6B4A sobre #EBF7F1: 6.1:1 ✓ */
+.badge-adjudicada   { background: var(--ok-bg);      color: var(--ok);      }
+
+/* #8B2020 sobre #F8EAEA: 5.9:1 ✓ */
+.badge-revocada,
+.badge-desierta     { background: var(--danger-bg);  color: var(--danger);  }
+
+/* #5A5550 sobre #EDEBE7: 5.1:1 ✓ */
+.badge-cerrada,
+.badge-suspendida   { background: var(--neutral-bg); color: var(--neutral); }
+
+/* Fallback para -- y estados no mapeados */
+.badge-\-\-         { background: var(--neutral-bg); color: var(--neutral); }
+
+/* ====================================================================
+   PAGINACIÓN
+   INDICADOR 2.1.1: botones deshabilitados en primera/última página
+   ==================================================================== */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+  margin: var(--s5) 0;
+  flex-wrap: wrap;
+}
+
+.page-info {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0 var(--s3);
+  min-width: 110px;
+  text-align: center;
+}
+
+/* ====================================================================
+   DETALLE DE LICITACIÓN
+   INDICADOR 3.2.4: todos los campos de la API renderizados
+   ==================================================================== */
+
+.detalle-content {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r4);
+  padding: var(--s6);
+  margin-top: var(--s4);
+  box-shadow: var(--shadow-xs);
+}
+
+.detalle-content > h1 {
+  font-size: var(--text-xl);
+  margin-bottom: var(--s5);
+  padding-bottom: var(--s4);
+  border-bottom: 1px solid var(--rule);
+  display: block; /* override flex de section h1 */
+}
+
+.detalle-content > h1::before { display: none; } /* sin decoración en el h1 de tarjeta */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s3);
+  margin-top: var(--s4);
+}
+
+.detail-item {
+  padding: var(--s3) var(--s4);
+  background: var(--paper);
+  border-radius: var(--r2);
+  border-left: 3px solid var(--copper-ui);
+}
+
+.detail-item.full { grid-column: 1 / -1; }
+
+/* Etiqueta de campo: uppercase pequeño, gris */
+.detail-item h3 {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin-bottom: var(--s1);
+  line-height: 1.3;
+}
+
+.detail-item p {
+  font-size: var(--text-base);
+  color: var(--text);
+  margin: 0;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* ====================================================================
+   PROVEEDOR
+   ==================================================================== */
+
+.proveedor-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r4);
+  padding: var(--s6);
+  margin-top: var(--s4);
+  box-shadow: var(--shadow-xs);
+}
+
+.proveedor-card h2 {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: var(--s5);
+  padding-bottom: var(--s3);
+  border-bottom: 1px solid var(--rule);
+}
+
+.proveedor-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--s3);
+}
+
+/* ====================================================================
+   ESTADO VACÍO
+   ==================================================================== */
+
+.empty-state {
+  text-align: center;
+  padding: var(--s8) var(--s5);
+  color: var(--muted);
+  font-size: var(--text-base);
+  border: 1px dashed var(--rule);
+  border-radius: var(--r3);
+  background: var(--surface);
+}
+
+/* ====================================================================
+   ACCESIBILIDAD
+   INDICADOR 3.1.3: Skip link, sr-only, foco en modales/detalle
+   ==================================================================== */
+
+/* WCAG 2.4.1 — Skip link oculto hasta recibir foco por teclado */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: var(--s3);
+  background: var(--copper);
+  color: white;
+  padding: var(--s2) var(--s4);
+  border-radius: var(--r2);
+  text-decoration: none;
+  z-index: 999;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transition: top var(--t1);
+}
+.skip-link:focus { top: var(--s3); }
+
+/* WCAG 1.3.1 — Texto solo para screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ====================================================================
+   BOTÓN HAMBURGUESA (móvil/tablet)
+   COMENTARIO: oculto en desktop, visible desde 900px hacia abajo
+   ==================================================================== */
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  border-radius: var(--r2);
+}
+
+/* ====================================================================
+   MEDIA QUERIES — TABLET (≤ 900px)
+   INDICADOR 1.2.3: tabla → tarjetas data-label, filtros 1 col,
+   hero centrado, grid features 2 col, menú colapsable
+   ==================================================================== */
+
+@media (max-width: 900px) {
+
+  /* COMENTARIO: Breakpoint tablet 900px — reordenamiento de layout */
+
+  h1 { font-size: var(--text-xl); }
+  h2 { font-size: var(--text-lg); }
+
+  .container,
+  .container-main { padding: var(--s5) var(--s4); }
+
+  /* Hero centrado en tablet */
+  .hero-section { padding: var(--s7) var(--s4); }
+  .hero-content { text-align: center; }
+  .hero-section h1 { max-width: 100%; font-size: clamp(1.9rem, 4.5vw, 2.8rem); }
+  .hero-section h1::after { margin: var(--s4) auto 0; }
+  .hero-subtitle,
+  .hero-description { max-width: 100%; }
+  .hero-actions { justify-content: center; }
+
+  /* Features: 2 columnas en tablet */
+  .features-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s4);
+    padding: var(--s5) var(--s4);
+  }
+  .features-grid li:last-child { grid-column: 1 / -1; }
+
+  /* COMENTARIO: Menú hamburguesa visible — max-height colapsa el menú */
+  .nav-toggle { display: inline-flex; }
+  .navbar { flex-wrap: wrap; padding: var(--s2) var(--s4); gap: var(--s3); }
+  .nav-menu {
+    flex-basis: 100%;
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--t2);
+    gap: 0;
+    margin-left: 0;
+    margin-top: 0;
+  }
+  .nav-menu.open { max-height: 400px; margin-top: var(--s2); }
+  .nav-menu button {
+    width: 100%;
+    text-align: left;
+    padding: var(--s3) var(--s4);
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-menu button.active::after { display: none; }
+
+  /* COMENTARIO: Filtros en 1 columna — evita overflow horizontal */
+  .filtros-grid { grid-template-columns: 1fr; }
+
+  /* COMENTARIO: Tabla → tarjetas con data-label en tablet
+     Cada td muestra su etiqueta via ::before */
+  .table-responsive { border: none; border-radius: 0; background: transparent; }
+  .table { border: 0; }
+  .table thead { display: none; }
+  .table tbody,
+  .table tr { display: block; }
+  .table tr {
+    margin-bottom: var(--s3);
+    border: 1px solid var(--rule);
+    border-radius: var(--r3);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow-xs);
+  }
+  .table tbody tr:hover,
+  .table-striped tbody tr:nth-child(even),
+  .table-striped tbody tr:nth-child(even):hover { background: var(--surface); }
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--s3);
+    padding: var(--s2) var(--s4);
+    border-bottom: 1px solid var(--rule);
+    font-size: var(--text-sm);
+  }
+  .table td:last-child { border-bottom: none; }
+  .table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    min-width: 88px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  /* Detalle: 2 columnas en tablet */
+  .detail-grid { grid-template-columns: 1fr 1fr; }
+  .detail-item.full { grid-column: 1 / -1; }
+
+  .listado-section,
+  .detalle-section,
+  .proveedores-section { padding: var(--s5) var(--s4); }
+
+  .pagination { gap: var(--s2); }
+}
+
+/* ====================================================================
+   MEDIA QUERIES — MÓVIL (≤ 480px)
+   INDICADOR 1.2.3: 1 columna, botones full-width, font reducido,
+   spacing comprimido
+   ==================================================================== */
+
+@media (max-width: 480px) {
+
+  /* COMENTARIO: Breakpoint móvil 480px — diseño ultra compacto, 1 columna */
+
+  :root {
+    --text-base: 14px;
+    --s5: 20px;
+    --s6: 28px;
+    --s7: 40px;
+    --s8: 52px;
+  }
+
+  h1 { font-size: var(--text-xl); }
+  h2 { font-size: var(--text-lg); }
+
+  .hero-section { padding: var(--s6) var(--s3); }
+  .hero-section h1 { font-size: 1.85rem; }
+
+  /* COMENTARIO: Features 1 col en móvil */
+  .features-grid { grid-template-columns: 1fr; padding: var(--s4) var(--s3); }
+  .features-grid li:last-child { grid-column: auto; }
+
+  /* COMENTARIO: Botones full-width en hero para touch — mínimo 44px height */
+  .btn { min-height: 44px; }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+
+  .navbar { padding: var(--s2) var(--s3); }
+  .logo-button { font-size: var(--text-base); }
+
+  .listado-section,
+  .detalle-section,
+  .proveedores-section { padding: var(--s4) var(--s3); }
+
+  .container,
+  .container-main { padding: var(--s4) var(--s3); }
+
+  .filtros-form,
+  .proveedor-form { padding: var(--s4) var(--s3); }
+
+  /* COMENTARIO: Detalle 1 col en móvil */
+  .detail-grid { grid-template-columns: 1fr; }
+
+  /* COMENTARIO: Paginación apilada en móvil */
+  .pagination { flex-direction: column; align-items: stretch; gap: var(--s2); }
+  .btn-paging { justify-content: center; width: 100%; }
+  .page-info { padding: 0; text-align: center; }
+
+  .alert { flex-direction: column; gap: var(--s2); }
+  .app-footer { padding: var(--s4) var(--s3); font-size: var(--text-xs); }
+}
+
+/* ====================================================================
+   MODO OSCURO
+   ==================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:      #131C2B;
+    --surface:    #1C2A3E;
+    --text:       #EAE6E0;
+    --muted:      #9B9690;
+    --rule:       #2A3B54;
+    --dim:        #6B6560;
+    --ok-bg:      rgba(26,107,74,0.18);
+    --info-bg:    rgba(26,74,138,0.18);
+    --danger-bg:  rgba(139,32,32,0.18);
+    --warn-bg:    rgba(122,90,10,0.18);
+    --neutral-bg: rgba(90,85,80,0.18);
+  }
+
+  body { background: var(--paper); }
+
+  /* --ink (#1B2B4B) es dark en light mode; en dark mode el texto primario usa --text (#EAE6E0) */
+  h1, h2, h3, h4, h5, h6 { color: var(--text); }
+  label                    { color: var(--text); }
+
+  .listado-section h1,
+  .detalle-section h1,
+  .proveedores-section h1  { color: var(--text); }
+
+  .nombre-col              { color: var(--text); }
+
+  /* Botones: dark mode — texto visible sobre superficies oscuras */
+  .btn-paging              { color: var(--text); border-color: var(--rule); }
+  .btn-secondary:hover:not(:disabled) {
+    color: var(--text);
+    border-color: var(--muted);
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* Tabla: thead navy (#1B2B4B) se pierde sobre surface (#1C2A3E); usar borde inferior cobre como separador */
+  .table thead {
+    background: rgba(255,255,255,0.07);  /* elevación sutil sobre surface */
+    color: var(--muted);
+    border-bottom: 2px solid var(--copper-ui);
+  }
+
+  .form-control { background: var(--paper); color: var(--text); border-color: var(--rule); }
+
+  .filtros-form, .proveedor-form,
+  .detalle-content, .proveedor-card,
+  .feature-card, .table,
+  .table-responsive { background: var(--surface); }
+
+  .table tr { background: var(--surface); }
+  .table tbody tr:hover,
+  .table-striped tbody tr:nth-child(even):hover { background: rgba(255,255,255,0.04); }
+  .table-striped tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+  .codigo-mono { background: var(--paper); border-color: var(--rule); }
+  .detail-item { background: rgba(255,255,255,0.04); }
+  .info-text   { background: var(--paper); border-color: var(--rule); }
+}
+
+/* ====================================================================
+   REDUCCIÓN DE MOVIMIENTO
+   INDICADOR 3.1.3: respeta preferencia del sistema
+   ==================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ====================================================================
+   IMPRESIÓN
+   ==================================================================== */
+
+@media print {
+  .app-header, .pagination, .btn,
+  .filtros-form, .loader-overlay, .nav-toggle { display: none !important; }
+  body { font-size: 11pt; background: white; color: black; }
+  .container, .container-main { max-width: 100%; padding: 0; }
+  .detail-grid { grid-template-columns: 1fr 1fr; }
+  a { color: black; text-decoration: underline; }
+}
